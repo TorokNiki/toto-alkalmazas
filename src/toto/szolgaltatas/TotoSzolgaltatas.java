@@ -16,19 +16,47 @@ import java.util.List;
 public class TotoSzolgaltatas {
     private List<Fordulo> fordulokLista;
 
+    public void statisztika() {
+        double osszDB = 0;
+        double hazaiDB = 0;
+        double dontetlenDB = 0;
+        double vendegDB = 0;
+        double hazaiSzazalek = 0, vendegSzazalek = 0, dontetlenSzazalek = 0;
+        for (int i = 0; i < fordulokLista.size(); i++) {
+            List<Eredmeny> eredmenyek = fordulokLista.get(i).getEredmenyek();
+            for (int j = 0; j < eredmenyek.size(); j++) {
+                switch (eredmenyek.get(j)) {
+                    case _1:
+                        hazaiDB++;
+                        break;
+                    case _2:
+                        vendegDB++;
+                        break;
+                    case X:
+                        dontetlenDB++;
+                        break;
+                }
+                osszDB++;
+            }
+        }
+        hazaiSzazalek = hazaiDB / osszDB * 100;
+        vendegSzazalek = vendegDB / osszDB * 100;
+        dontetlenSzazalek = dontetlenDB / osszDB * 100;
+
+        System.out.printf("Statisztika: #1 csapat nyert: %.2f %%, #2 csapat nyert: %.2f %%, dontetlen: %.2f %%\n", hazaiSzazalek, vendegSzazalek, dontetlenSzazalek);
+    }
+
     public void legnagyobbNyeremeny() {
-
-
         int legnagyobb = 0;
         for (int i = 0; i < fordulokLista.size(); i++) {
             List<Talalat> talalatok = fordulokLista.get(i).getTalalatok();
             for (int j = 0; j < talalatok.size(); j++) {
-                if (talalatok.get(i).getNyeremeny() > legnagyobb) {
-                    legnagyobb = talalatok.get(i).getNyeremeny();
+                if (talalatok.get(j).getNyeremeny() > legnagyobb) {
+                    legnagyobb = talalatok.get(j).getNyeremeny();
                 }
             }
         }
-        System.out.printf("A legnagyobb  nyeremeny amit rogzitettek: %f Ft", legnagyobb);
+        System.out.printf("A legnagyobb  nyeremeny amit rogzitettek: %,8d Ft\n", legnagyobb);
     }
 
     public void beolvasas(String file) {
