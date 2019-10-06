@@ -9,6 +9,8 @@ public class Fordulo {
     private int het;
     private int forduloAHeten;
     private LocalDate datum;
+    private List<Eredmeny> eredmenyekLista;
+    private List<Talalat> talalatokLista;
 
     public Fordulo() {
     }
@@ -44,20 +46,20 @@ public class Fordulo {
     public void setDatum(LocalDate datum) {
         this.datum = datum;
     }
-//    public List<Talalat> getTalalatok(){
-//        List<Talalat> talalatok;
-//        return talalatok;
-//
-//    }
-    public void setTalalatok(List<Talalat> talalat){
 
+    public List<Talalat> getTalalatok() {
+        return talalatokLista;
     }
-//    public List<Eredmeny> getEredmenyek(){
-//        List<Eredmeny> eredmeny;
-//        return eredmeny;
-//
-//    }
-    public void setEredmenyek(List<Eredmeny> eredmenyek){
 
+    public void setTalalatok(List<Talalat> talalat) {
+        this.talalatokLista = talalat;
+    }
+
+    public List<Eredmeny> getEredmenyek() {
+        return eredmenyekLista;
+    }
+
+    public void setEredmenyek(List<Eredmeny> eredmenyek) {
+        this.eredmenyekLista = eredmenyek;
     }
 }
