@@ -15,6 +15,39 @@ import java.util.List;
 
 public class TotoSzolgaltatas {
     private List<Fordulo> fordulokLista;
+    public void tipp(LocalDate bedatum,String tipp){
+        int eltalalt=0;
+        int tippIndex=0;
+        int nyeremeny=0;
+        for (int i = 0; i < fordulokLista.size(); i++) {
+            if (fordulokLista.get(i).getDatum().equals(bedatum)){
+                List<Eredmeny> eredmenyek=fordulokLista.get(i).getEredmenyek();
+                List<Eredmeny> tippEredmeny=new ArrayList<>();
+                for (int j = 0; j <eredmenyek.size(); j++) {
+                    switch (tipp.charAt(tippIndex)){
+                        case '1': tippEredmeny.add(Eredmeny._1);break;
+                        case '2':tippEredmeny.add(Eredmeny._2);break;
+                        case 'x':tippEredmeny.add(Eredmeny.X);break;
+                    }
+                    tippIndex++;
+                    if (eredmenyek.get(j).equals(tippEredmeny.get(j))){
+                        eltalalt++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < fordulokLista.size(); i++) {
+            if (fordulokLista.get(i).getDatum().equals(bedatum)){
+                List<Talalat> talalatok= fordulokLista.get(i).getTalalatok();
+                for (int j = 0; j < talalatok.size(); j++) {
+                    if (talalatok.get(j).getTalalatokSzama()==eltalalt){
+                        nyeremeny=talalatok.get(j).getNyeremeny();
+                    }
+                }
+            }
+        }
+        System.out.printf("Eredmeny: talalat: %d, nyeremeny: %,8d Ft",eltalalt,nyeremeny);
+    }
 
     public void statisztika() {
         double osszDB = 0;
@@ -101,8 +134,8 @@ public class TotoSzolgaltatas {
     }
 
     private void setEredmenyLista(String[] adatok, List<Eredmeny> eredmenyeklista) {
-        for (int i = 0; i < 13 + 1; i++) {
-            switch (adatok[i + 6]) {
+        for (int i = 0; i < 14; i++) {
+            switch (adatok[i + 14]) {
                 case "1":
                     eredmenyeklista.add(Eredmeny._1);
                     break;
@@ -122,6 +155,7 @@ public class TotoSzolgaltatas {
             String ujadat = adatok[i + 5].replace(" Ft", "");
             ujadat = ujadat.replace(" ", "");
             int nyeremeny = Integer.parseInt(ujadat);
+            talatSzam--;
             talalatokLita.add(new Talalat(talatSzam, nyertTalalatokSzama, nyeremeny));
 
         }
