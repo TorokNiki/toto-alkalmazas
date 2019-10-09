@@ -21,36 +21,47 @@ public class TotoSzolgaltatas {
         int tippIndex = 0;
         int nyeremeny = 0;
         int tippNyeremenye = 0;
+
         int azonosTippelokSzama = 0;
+
         eltalalt = getEltalaltTalalatokSzama(bedatum, tipp, eltalalt, tippIndex);
         for (int i = 0; i < fordulokLista.size(); i++) {
             if (fordulokLista.get(i).getDatum().equals(bedatum)) {
                 List<Talalat> talalatok = fordulokLista.get(i).getTalalatok();
                 for (int j = 0; j < talalatok.size(); j++) {
-                    nyeremeny += talalatok.get(j).getNyeremeny();
+                   // nyeremeny += talalatok.get(j).getNyeremeny();
+
                     if (talalatok.get(j).getTalalatokSzama() == eltalalt) {
-                        azonosTippelokSzama = talalatok.get(j).getNyertTalalatokSzama();
+                      //  azonosTippelokSzama = talalatok.get(j).getNyertTalalatokSzama();
+                        tippNyeremenye= talalatok.get(j).getNyeremeny();
                     }
+
                 }
             }
         }
-        nyeremeny /= 100;//1% nyeremény
-        tippNyeremenye = getTippNyeremenye(eltalalt, nyeremeny, tippNyeremenye, azonosTippelokSzama);
+
+       // nyeremeny /= 100;//1% nyeremény
+       // tippNyeremenye = getTippNyeremenye(eltalalt, nyeremeny, tippNyeremenye, azonosTippelokSzama);
         System.out.printf("Eredmeny: talalat: %d, nyeremeny: %,8d Ft", eltalalt, tippNyeremenye);
+
     }
 
     private int getTippNyeremenye(int eltalalt, int nyeremeny, int tippNyeremenye, int azonosTippelokSzama) {
         if (eltalalt == 14) {
             if (azonosTippelokSzama > 0) {
                 tippNyeremenye = nyeremeny * 37 / azonosTippelokSzama;
+
             } else {
                 tippNyeremenye = nyeremeny * 37;
+
             }
         } else if (eltalalt == 13) {
             if (azonosTippelokSzama > 0) {
-                tippNyeremenye = (nyeremeny * 16) / azonosTippelokSzama;
+                tippNyeremenye = nyeremeny * 16 / azonosTippelokSzama;
+
             } else {
                 tippNyeremenye = nyeremeny * 16;
+
             }
         } else if (eltalalt == 12) {
             if (azonosTippelokSzama > 0) {
@@ -148,7 +159,7 @@ public class TotoSzolgaltatas {
         this.fordulokLista = new ArrayList<>();
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.d.");
-            int talatSzam = 14;
+            int talatSzam = 15;
             adatBeolvasas(file, formatter, talatSzam);
         } catch (FileNotFoundException ex) {
             System.err.printf("Hiba: %s", ex.getMessage());
@@ -175,7 +186,6 @@ public class TotoSzolgaltatas {
             List<Talalat> talalatokLita = new ArrayList<>();
             List<Eredmeny> eredmenyeklista = new ArrayList<>();
             setTalalatLista(talatSzam, adatok, talalatokLita);
-            talatSzam--;
             setEredmenyLista(adatok, eredmenyeklista);
             Fordulo fordulo = getFordulo(ev, het, forduloHet, datum, talalatokLita, eredmenyeklista);
             this.fordulokLista.add(fordulo);
@@ -197,6 +207,16 @@ public class TotoSzolgaltatas {
                 case "X":
                     eredmenyeklista.add(Eredmeny.X);
                     break;
+                case "+1":
+                    eredmenyeklista.add(Eredmeny._1);
+                    break;
+                case "+2":
+                    eredmenyeklista.add(Eredmeny._2);
+                    break;
+                case "+X":
+                    eredmenyeklista.add(Eredmeny.X);
+                    break;
+
             }
         }
     }
