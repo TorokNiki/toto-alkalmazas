@@ -15,38 +15,90 @@ import java.util.List;
 
 public class TotoSzolgaltatas {
     private List<Fordulo> fordulokLista;
-    public void tipp(LocalDate bedatum,String tipp){
-        int eltalalt=0;
-        int tippIndex=0;
-        int nyeremeny=0;
+
+    public void tipp(LocalDate bedatum, String tipp) {
+        int eltalalt = 0;
+        int tippIndex = 0;
+        int nyeremeny = 0;
+        int tippNyeremenye = 0;
+        int azonosTippelokSzama = 0;
+        eltalalt = getEltalaltTalalatokSzama(bedatum, tipp, eltalalt, tippIndex);
         for (int i = 0; i < fordulokLista.size(); i++) {
-            if (fordulokLista.get(i).getDatum().equals(bedatum)){
-                List<Eredmeny> eredmenyek=fordulokLista.get(i).getEredmenyek();
-                List<Eredmeny> tippEredmeny=new ArrayList<>();
-                for (int j = 0; j <eredmenyek.size(); j++) {
-                    switch (tipp.charAt(tippIndex)){
-                        case '1': tippEredmeny.add(Eredmeny._1);break;
-                        case '2':tippEredmeny.add(Eredmeny._2);break;
-                        case 'x':tippEredmeny.add(Eredmeny.X);break;
+            if (fordulokLista.get(i).getDatum().equals(bedatum)) {
+                List<Talalat> talalatok = fordulokLista.get(i).getTalalatok();
+                for (int j = 0; j < talalatok.size(); j++) {
+                    nyeremeny += talalatok.get(j).getNyeremeny();
+                    if (talalatok.get(j).getTalalatokSzama() == eltalalt) {
+                        azonosTippelokSzama = talalatok.get(j).getNyertTalalatokSzama();
+                    }
+                }
+            }
+        }
+        nyeremeny /= 100;//1% nyeremény
+        tippNyeremenye = getTippNyeremenye(eltalalt, nyeremeny, tippNyeremenye, azonosTippelokSzama);
+        System.out.printf("Eredmeny: talalat: %d, nyeremeny: %,8d Ft", eltalalt, tippNyeremenye);
+    }
+
+    private int getTippNyeremenye(int eltalalt, int nyeremeny, int tippNyeremenye, int azonosTippelokSzama) {
+        if (eltalalt == 14) {
+            if (azonosTippelokSzama > 0) {
+                tippNyeremenye = nyeremeny * 37 / azonosTippelokSzama;
+            } else {
+                tippNyeremenye = nyeremeny * 37;
+            }
+        } else if (eltalalt == 13) {
+            if (azonosTippelokSzama > 0) {
+                tippNyeremenye = (nyeremeny * 16) / azonosTippelokSzama;
+            } else {
+                tippNyeremenye = nyeremeny * 16;
+            }
+        } else if (eltalalt == 12) {
+            if (azonosTippelokSzama > 0) {
+                tippNyeremenye = nyeremeny * 12 / azonosTippelokSzama;
+            } else {
+                tippNyeremenye = nyeremeny * 12;
+            }
+        } else if (eltalalt == 11) {
+            if (azonosTippelokSzama > 0) {
+                tippNyeremenye = nyeremeny * 12 / azonosTippelokSzama;
+            } else {
+                tippNyeremenye = nyeremeny * 12;
+            }
+        } else if (eltalalt == 10) {
+            if (azonosTippelokSzama > 0) {
+                tippNyeremenye = nyeremeny * 23 / azonosTippelokSzama;
+            } else {
+                tippNyeremenye = nyeremeny * 23;
+            }
+        }
+        return tippNyeremenye;
+    }
+
+    private int getEltalaltTalalatokSzama(LocalDate bedatum, String tipp, int eltalalt, int tippIndex) {
+        for (int i = 0; i < fordulokLista.size(); i++) {
+            if (fordulokLista.get(i).getDatum().equals(bedatum)) {
+                List<Eredmeny> eredmenyek = fordulokLista.get(i).getEredmenyek();
+                List<Eredmeny> tippEredmeny = new ArrayList<>();
+                for (int j = 0; j < eredmenyek.size(); j++) {
+                    switch (tipp.charAt(tippIndex)) {
+                        case '1':
+                            tippEredmeny.add(Eredmeny._1);
+                            break;
+                        case '2':
+                            tippEredmeny.add(Eredmeny._2);
+                            break;
+                        case 'x':
+                            tippEredmeny.add(Eredmeny.X);
+                            break;
                     }
                     tippIndex++;
-                    if (eredmenyek.get(j).equals(tippEredmeny.get(j))){
+                    if (eredmenyek.get(j).equals(tippEredmeny.get(j))) {
                         eltalalt++;
                     }
                 }
             }
         }
-        for (int i = 0; i < fordulokLista.size(); i++) {
-            if (fordulokLista.get(i).getDatum().equals(bedatum)){
-                List<Talalat> talalatok= fordulokLista.get(i).getTalalatok();
-                for (int j = 0; j < talalatok.size(); j++) {
-                    if (talalatok.get(j).getTalalatokSzama()==eltalalt){
-                        nyeremeny=talalatok.get(j).getNyeremeny();
-                    }
-                }
-            }
-        }
-        System.out.printf("Eredmeny: talalat: %d, nyeremeny: %,8d Ft",eltalalt,nyeremeny);
+        return eltalalt;
     }
 
     public void statisztika() {
