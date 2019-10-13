@@ -21,29 +21,24 @@ public class TotoSzolgaltatas {
         int tippIndex = 0;
         int nyeremeny = 0;
         int tippNyeremenye = 0;
-
         int azonosTippelokSzama = 0;
-
         eltalalt = getEltalaltTalalatokSzama(bedatum, tipp, eltalalt, tippIndex);
         for (int i = 0; i < fordulokLista.size(); i++) {
             if (fordulokLista.get(i).getDatum().equals(bedatum)) {
                 List<Talalat> talalatok = fordulokLista.get(i).getTalalatok();
                 for (int j = 0; j < talalatok.size(); j++) {
-                   // nyeremeny += talalatok.get(j).getNyeremeny();
+                    // nyeremeny += talalatok.get(j).getNyeremeny();
 
                     if (talalatok.get(j).getTalalatokSzama() == eltalalt) {
-                      //  azonosTippelokSzama = talalatok.get(j).getNyertTalalatokSzama();
-                        tippNyeremenye= talalatok.get(j).getNyeremeny();
+                        //  azonosTippelokSzama = talalatok.get(j).getNyertTalalatokSzama();
+                        tippNyeremenye = talalatok.get(j).getNyeremeny();
                     }
-
                 }
             }
         }
-
-       // nyeremeny /= 100;//1% nyeremény
-       // tippNyeremenye = getTippNyeremenye(eltalalt, nyeremeny, tippNyeremenye, azonosTippelokSzama);
+        // nyeremeny /= 100;//1% nyeremény
+        // tippNyeremenye = getTippNyeremenye(eltalalt, nyeremeny, tippNyeremenye, azonosTippelokSzama);
         System.out.printf("Eredmeny: talalat: %d, nyeremeny: %,8d Ft", eltalalt, tippNyeremenye);
-
     }
 
     private int getTippNyeremenye(int eltalalt, int nyeremeny, int tippNyeremenye, int azonosTippelokSzama) {
@@ -99,6 +94,7 @@ public class TotoSzolgaltatas {
                             tippEredmeny.add(Eredmeny._2);
                             break;
                         case 'x':
+                        case 'X':
                             tippEredmeny.add(Eredmeny.X);
                             break;
                     }
@@ -129,6 +125,7 @@ public class TotoSzolgaltatas {
                         vendegDB++;
                         break;
                     case X:
+
                         dontetlenDB++;
                         break;
                 }
@@ -159,7 +156,7 @@ public class TotoSzolgaltatas {
         this.fordulokLista = new ArrayList<>();
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.d.");
-            int talatSzam = 15;
+            int talatSzam = 14;
             adatBeolvasas(file, formatter, talatSzam);
         } catch (FileNotFoundException ex) {
             System.err.printf("Hiba: %s", ex.getMessage());
@@ -174,6 +171,7 @@ public class TotoSzolgaltatas {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
         String sor = br.readLine();
+        int sorok = 0;
         while (sor != null) {
             String[] adatok = sor.split(";");
             int ev = Integer.parseInt(adatok[0]);
@@ -189,8 +187,10 @@ public class TotoSzolgaltatas {
             setEredmenyLista(adatok, eredmenyeklista);
             Fordulo fordulo = getFordulo(ev, het, forduloHet, datum, talalatokLita, eredmenyeklista);
             this.fordulokLista.add(fordulo);
+            sorok++;
             sor = br.readLine();
         }
+        //System.out.println(sorok);
         br.close();
         fr.close();
     }
@@ -199,24 +199,19 @@ public class TotoSzolgaltatas {
         for (int i = 0; i < 14; i++) {
             switch (adatok[i + 14]) {
                 case "1":
-                    eredmenyeklista.add(Eredmeny._1);
-                    break;
-                case "2":
-                    eredmenyeklista.add(Eredmeny._2);
-                    break;
-                case "X":
-                    eredmenyeklista.add(Eredmeny.X);
-                    break;
                 case "+1":
                     eredmenyeklista.add(Eredmeny._1);
                     break;
+                case "2":
                 case "+2":
                     eredmenyeklista.add(Eredmeny._2);
                     break;
+                case "X":
                 case "+X":
+                case "x":
+                case "+x":
                     eredmenyeklista.add(Eredmeny.X);
                     break;
-
             }
         }
     }
@@ -227,8 +222,8 @@ public class TotoSzolgaltatas {
             String ujadat = adatok[i + 5].replace(" Ft", "");
             ujadat = ujadat.replace(" ", "");
             int nyeremeny = Integer.parseInt(ujadat);
-            talatSzam--;
             talalatokLita.add(new Talalat(talatSzam, nyertTalalatokSzama, nyeremeny));
+            talatSzam--;
 
         }
     }

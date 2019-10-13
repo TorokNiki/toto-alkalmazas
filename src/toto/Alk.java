@@ -19,6 +19,6 @@ public class Alk {
         LocalDate bedatum = LocalDate.parse(sc.nextLine(), formatter);
         System.out.print("Kerem adjon meg egy tippet: ");
         String tipp = sc.nextLine();
-        szolgaltatas.tipp(bedatum,tipp);
+        szolgaltatas.tipp(bedatum, tipp);
     }
 }
